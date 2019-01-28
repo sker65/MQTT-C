@@ -11,7 +11,7 @@
     A template for opening a non-blocking POSIX socket.
 */
 int open_nb_socket(const char* addr, const char* port) {
-    struct addrinfo hints = {0};
+    struct addrinfo hints = {.ai_family = AF_UNSPEC};
 
     hints.ai_family = AF_UNSPEC; /* IPv4 or IPv6 */
     hints.ai_socktype = SOCK_STREAM; /* Must be TCP */
@@ -35,7 +35,7 @@ int open_nb_socket(const char* addr, const char* port) {
         rv = connect(sockfd, servinfo->ai_addr, servinfo->ai_addrlen);
         if(rv == -1) continue;
         break;
-    }  
+    }
 
     /* free servinfo */
     freeaddrinfo(servinfo);
@@ -44,7 +44,7 @@ int open_nb_socket(const char* addr, const char* port) {
     if (sockfd != -1) fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK);
 
     /* return the new socket fd */
-    return sockfd;  
+    return sockfd;
 }
 
 #endif
